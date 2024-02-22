@@ -3,7 +3,7 @@ create authentication to interact with gmail API.
 create django views that use the Gmail API functions
 """
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 import os
 from google.auth.transport.requests import Request
@@ -12,7 +12,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 
-def get_gmail_service(request):
+def authenticate_gmail(request):
     """Get Gmail API service."""
     SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
@@ -38,12 +38,13 @@ def get_gmail_service(request):
             token.write(creds.to_json())
             print("credentials saved to token.json")
 
-    return build('gmail', 'v1', credentials=creds)
+    return HttpResponse("Gmail authentication successful.")
+     # return build('gmail', 'v1', credentials=creds)
 
 def move_messages_to_trash(request):
     """Move unread emails to the trash, max of 100"""
     try:
-        service = get_gmail_service(request)
+        service = authenticate_gmail(request)
         print("gmail service obtained successfully")
 
         results = service.users().messages().list(userId='me', q='is:unread', maxResults=5).execute()
