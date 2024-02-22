@@ -12,13 +12,14 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 
-def get_gmail_service():
+def get_gmail_service(request):
     """Get Gmail API service."""
     SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
     creds = None
+    print("Current working directory:", os.getcwd())
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json')
+        creds = Credentials.from_authorized_user_file('/vagrant/InboxCleaner/emails/token.json')
         print("Credentials loaded from token.json")
 
     if not creds or not creds.valid:
@@ -42,7 +43,7 @@ def get_gmail_service():
 def move_messages_to_trash(request):
     """Move unread emails to the trash, max of 100"""
     try:
-        service = get_gmail_service()
+        service = get_gmail_service(request)
         print("gmail service obtained successfully")
 
         results = service.users().messages().list(userId='me', q='is:unread', maxResults=5).execute()
@@ -61,3 +62,7 @@ def move_messages_to_trash(request):
     except Exception as e:
         print(f"Error: {str(e)}")
         return JsonResponse({'status': 'Error', 'message': str(e)}, status=500)
+
+def index(request):
+    """ the landing page for inboxcleaner """
+    return render(request, 'emails/index.html')
