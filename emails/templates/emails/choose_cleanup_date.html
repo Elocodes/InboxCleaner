@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Cleanup Date</title>
+</head>
+<body>
+    <h1>Choose Cleanup Date</h1>
+    <form action="{% url 'cleanup_emails' %}" method="post">
+        {% csrf_token %}
+        <label for="cleanup-date">Clean emails older than:</label>
+        <select id="cleanup-date" name="cleanup-date">
+            <!-- Add options dynamically, e.g., using JavaScript -->
+        </select>
+        <button type="submit">Clean Emails</button>
+    </form>
+</body>
+</html>
+
