@@ -27,7 +27,6 @@ def authenticate_gmail(request):
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
             print("credentials refreshed")
-            # return redirect('choose_cleanup_date')
 
         else:
             print("running local server for oauth2 flow...")
@@ -40,16 +39,14 @@ def authenticate_gmail(request):
             token.write(creds.to_json())
             print("credentials saved to token.json")
 
-    # return HttpResponse("Gmail authentication successful.")
         return build('gmail', 'v1', credentials=creds)
-    # return redirect('choose_cleanup_date')
 
 def move_messages_to_trash(request):
     """Move specified unread emails to the trash, max of 100"""
     try:
         service = authenticate_gmail(request)
         print("gmail service obtained successfully")
-        results = service.users().messages().list(userId='me', q=f'is:unread older_than:2m', maxResults=5).execute()
+        results = service.users().messages().list(userId='me', q=f'is:unread older_than:1m', maxResults=5).execute()
         messages = results.get('messages', [])
         if messages:
             print(f"found {len(messages)} unread emails")
@@ -58,7 +55,8 @@ def move_messages_to_trash(request):
                 service.users().messages().modify(userId='me', id=message_id,
                                                   body={'removeLabelIds': ['INBOX'],
                                                         'addLabelIds': ['TRASH']}).execute()
-            return JsonResponse({'status': 'Success', 'message': 'Unread emails moved to Trash.'})
+            return (len(messages))
+            print ('unread emails moved to trash')
         else:
             print("no unread emails found")
             return JsonResponse({'status': 'Success', 'message': 'No unread emails found.'})
@@ -66,35 +64,28 @@ def move_messages_to_trash(request):
         print(f"Error: {str(e)}")
         return JsonResponse({'status': 'Error', 'message': str(e)}, status=500)
 
+
 def index(request):
     """ the landing page for inboxcleaner """
     return render(request, 'emails/index.html')
 
-def get_available_cleanup_dates():
-    current_date = datetime.now()
-    available_dates = []
-
-    # Generate a list of month and year strings for the next 12 months
-    for i in range(1, 13):
-        cleanup_date = current_date - timedelta(days=30 * i)
-        available_dates.append(cleanup_date.strftime('%B %Y'))
-
-    return available_dates
 
 def choose_cleanup_date(request):
+    """ calculates and displays to user that emails older
+    than a month from current date will be trashed """
     if request.method == 'GET':
-        available_dates = get_available_cleanup_dates()
-        return render(request, 'emails/choose_cleanup_date.html', {'available_dates': available_dates})
+        cleanup_date = datetime.now() - timedelta(days=30)
+        formatted_date = cleanup_date.strftime('%B %d, %Y')
+        return render(request, 'emails/choose_cleanup_date.html', {'formatted_date': formatted_date})
     else:
         # Handle invalid or unexpected POST request
         return render(request, 'emails/cleanup_error.html', {'error_message': 'Invalid request'})
 
+
 def cleanup_emails(request):
+    """ call the function that authenticates and cleans email """
     if request.method == 'POST':
-        cleanup_date_str = request.POST.get('cleanup-date')
         try:
-            cleanup_date = datetime.strptime(cleanup_date_str, '%B %Y')
-            # auth = authenticate_gmail(request)
             num_emails_cleaned = move_messages_to_trash(request)
             return render(request, 'emails/cleanup_success.html', {'num_emails_cleaned': num_emails_cleaned})
         except ValueError:
@@ -106,4 +97,3 @@ def cleanup_emails(request):
     else:
         # Handle invalid or unexpected GET request
         return render(request, 'emails/cleanup_error.html', {'error_message': 'Invalid request'})
-
