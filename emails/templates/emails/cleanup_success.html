@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Cleanup</title>
+    <title>Cleanup Success</title>
     <style>
         body {
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -13,6 +13,11 @@
             height: 100vh;
             font-family: 'Arial', sans-serif;
             color: #000;
+            display: flex;
+	    flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         @keyframes gradient {
@@ -32,29 +37,12 @@
         h1, p {
             font-size: 35px;
         }
-
-        form {
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 20px;
-            background-color: #fff;
-            color: #000;
-            border: none;
-            cursor: pointer;
-        }
     </style>
 </head>
 
 <body>
-    <h1>Alert!</h1>
-    <p>After Authentication, 5 emails older than {{ formatted_date }} will be moved to trash.</p>
-    <form action="{% url 'cleanup_emails' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Click to proceed</button>
-    </form>
+    <h1>Cleanup Successful</h1>
+    <p>{{ num_emails_cleaned }} unread emails moved to Trash.</p>
 </body>
 
 </html>
