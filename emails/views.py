@@ -39,7 +39,7 @@ def authenticate_gmail(request):
             token.write(creds.to_json())
             print("credentials saved to token.json")
 
-        return build('gmail', 'v1', credentials=creds)
+    return build('gmail', 'v1', credentials=creds)
 
 def move_messages_to_trash(request):
     """Move specified unread emails to the trash, max of 100"""
