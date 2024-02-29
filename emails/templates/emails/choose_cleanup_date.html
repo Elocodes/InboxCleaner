@@ -1,20 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choose Cleanup Date</title>
+    <title>Confirm Cleanup</title>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            color: #000;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        h1, p {
+            font-size: 40px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 20px;
+            background-color: #fff;
+            color: #000;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Choose Cleanup Date</h1>
+    <h1>Alert!</h1>
+    <p>After Authentication, 5 emails older than {{ formatted_date }} will be moved to trash.</p>
     <form action="{% url 'cleanup_emails' %}" method="post">
         {% csrf_token %}
-        <label for="cleanup-date">Clean emails older than:</label>
-        <select id="cleanup-date" name="cleanup-date">
-            <!-- Add options dynamically, e.g., using JavaScript -->
-        </select>
-        <button type="submit">Clean Emails</button>
+        <button type="submit">Click to proceed</button>
     </form>
 </body>
+
 </html>
 
