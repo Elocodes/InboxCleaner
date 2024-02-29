@@ -7,18 +7,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InboxCleaner</title>
-    <!-- Add any additional styling or external CSS links here -->
+    <style>
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	    background-size: 400% 400%;
+	    animation: gradient 15s ease infinite;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+	div {
+	    text-align: center;
+	}
+
+        h1, p, button {
+            font-size: 50px; /* Increase font size */
+            margin-bottom: 30px;  /*Add some bottom margin for better spacing */
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px; /* Increase button font size */
+            background-color: #fff; /* Set button background color to white */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+         
+            50% {
+                background-position: 100% 50%;
+            }
+         
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <div>
-        <h1 style="text-align: center; font-weight: bold;">InboxCleaner</h1>
-        <p style="text-align: center;">Move your old unread emails to trash</p>
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="{% url 'authenticate_gmail' %}">
-                <button style="padding: 10px 20px; font-size: 16px;">Get Started</button>
-            </a>
-        </div>
+        <h1 style="font-weight: bold;">InboxCleaner</h1>
+        <p>Move your old unread emails to trash</p>
+        <a href="{% url 'choose_cleanup_date' %}">
+            <button>Get Started</button>
+        </a>
     </div>
 </body>
 
